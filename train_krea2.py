@@ -35,8 +35,8 @@ from common import clean, 生成optimizer, 哈, 哈哈, 计时, buffered_iterato
 
 def 评测pipeline人(pipe, validation_infer_steps, n_iter, guidance_scale, 人数=1):
     from imgutils.tagging import get_wd14_tags
-    人频率1 = {k: v for k, v in json.loads(open('./人频率6000000~7000000.json').read()).items() if v > 24*1.3}
-    人频率2 = {k: v for k, v in json.loads(open('./人频率1~6400000.json').read()).items() if v > 64*1.5}
+    人频率1 = {k: v for k, v in json.loads(open('./赠品/人频率6000000~7000000.json').read()).items() if v > 24*1.3}
+    人频率2 = {k: v for k, v in json.loads(open('./赠品/人频率1~6400000.json').read()).items() if v > 64*1.5}
     要测的人 = sorted(set(人频率1) | set(人频率2))
     记录 = []
     要测的人batched = [*batched(要测的人, 人数)]
