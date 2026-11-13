@@ -30,13 +30,13 @@
 
 现在刚训练了2天，看起来就就已经初具雏形了！下面这张图的画风从左到右分别是mignon，kani biimu，momoko (momopoco)，fuzichoco，kantoku，chen bin。
 
-![.\doc\step38000.webp](.\doc\step38000.webp)
+![./doc/step38000.webp](./doc/step38000.webp)
 
 下面这个指标是画风的准确度，看起来涨点也很快，检测用的是[Kaloscope2.0](https://huggingface.co/heathcliff01/Kaloscope2.0)模型。
 
 因为还在测试阶段，所以现在跑的这个版本不是dan上全部的画风，而是从群友处收集的128个常用画风，不过128个大抵也够用了吧。
 
-![.\doc\指标1.webp](.\doc\指标1.webp)
+![./doc/指标1.webp](./doc/指标1.webp)
 
 
 ## 成本
