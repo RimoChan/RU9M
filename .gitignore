@@ -1,0 +1,11 @@
+*.pyc
+*.png
+Thumbs.db
+
+*.bin
+*.safetensors
+*.pkl
+loss_log.txt
+
+metadata.json
+events.out.*

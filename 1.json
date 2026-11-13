@@ -1,0 +1,23 @@
+{
+    "rank": 64,
+    "max_train_steps": 200000,
+    "cycle_steps": 20000,
+    "checkpointing_steps": 2000,
+    "validation_interval": 2000,
+    "lr": 0.0002,
+    "lr_scheduler": "cosine_with_restarts",
+    "lr_cosine_min": 0.3,
+    "shift": 3.1581929,
+    "max_grad_norm": 0.1,
+    "validation_prompt_list": [
+        "1girl, kisaki (blue archive), eating baozi, sitting, indoors, mignon",
+        "1girl, black twintails, school uniform, outdoors, street, fullbody, black pantyhose, holding phone, looking at phone, > <, kani biimu",
+        "1girl, twintails, cat ears, maid, maid headdress, holding tray, white pantyhose, indoors, kitchen, momoko (momopoco), newest",
+        "1girl, momoi (blue archive), typing on keyboard, computer, sitting, angry, indoors, fuzichoco, newest",
+        "1girl, yuuka (blue archive), holding cup, sitting, indoors, kantoku, newest",
+        "1girl, azusa (blue archive), eating pizza, sitting, indoors, chen bin"
+    ],
+    "validation_infer_cfg": 1.6,
+    "quantization": "fp8",
+    "seed": 1
+}
