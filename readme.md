@@ -48,17 +48,55 @@
 
 ## 使用方法
 
-1. 做数据
+### 做数据
 
-代码是`刷.py`。
+刷数的脚本是`刷.py`，大体上分为3步:
 
-先用krea2或moss刷1遍，然后清洗，然后SDXL重绘刷1遍。
+1. 用MOSS刷1遍原图。
+2. 用wd14清洗<sub>(听起来很像wd40)</sub>。
+3. 用SDXL重绘1遍。
 
-2. 跑训练
+这里我用的数据集是[danbooru2024](https://huggingface.co/datasets/deepghs/danbooru2024)，不过实际上只会读tags和size，图片并不会用到，所以数据集换旧的或者新的都可以。
 
-代码是`train_moss.py`。
+读取出来之后tags会被拼装成prompt，并且将画风随机替换为为`赠品/好画师.json`中的1到2个画风。
 
-具体的脚本启动方式就以后再讲吧，现在应该也没有人想直接跑！
+刷完一遍之后，就会在输出文件夹为每个样本保存噪声、prompt_embeds、原始prompt、生成的图片。
+
+可以参考这个命令，虽然叫krea，因为1开始是在krea2上做的实验所以就叫这个名字了，实际上MOSS也能刷。
+
+```bash
+python 刷.py krea --model_type=moss --data_dir="X:/原始数据集路径" --out_dir="output" --moss_model="X:/MOSS-Image-SFT"
+```
+
+然后接下来是清洗，因为模型有时候不太遵守prompt，所以用它简单洗1下，主要是把多人图和带有男人的图洗掉。
+
+不过其实清洗到底能不能涨点，也并没有验证过。
+
+可以参考这个命令——
+
+```bash
+python 刷.py 清洗 --out_dir="output"
+```
+
+最后是重绘画风，读取前面生成的图和prompt，用SDXL加0.8的噪声然后重绘1下。
+
+此外，这里有1个小操作，之前为了让prompt embedding比较明显，我在画师名前面加了1个`@`符号，应该和Anima 1样，不过SDXL是不需要`@`的，所以刷的时候还得去掉。
+
+可以参考这个命令——
+
+```bash
+python 刷.py sdxl --out_dir="output" --sdxl_model="R:/path/to/waiNSFWIllustrious_v140.safetensors" --后缀="moss" --strength=0.8
+```
+
+### 训练
+
+训练脚本是`train_moss.py`。
+
+因为大家可能不知道怎么配参数，总之我试了1个配置，当然不是收敛最快的，不过肯定能跑，大家可以这样来跑看看——
+
+```bash
+python train_moss.py --config="赠品/moss默认参数.json" --pretrained_model_name_or_path="C:/path/to/MOSS-Image-SFT" --train_data_dir="output" --output_dir="RU9MOSS"
+```
 
 
 ## 结束
