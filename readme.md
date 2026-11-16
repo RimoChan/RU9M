@@ -36,7 +36,9 @@
 
 下面这个指标是画风的准确度，看起来涨点也很快，检测用的是[Kaloscope2.0](https://huggingface.co/heathcliff01/Kaloscope2.0)模型。
 
-因为还在测试阶段，所以现在跑的这个版本不是dan上全部的画风，而是从群友处收集的128个常用画风，不过128个大抵也够用了吧。
+因为还在测试阶段，所以现在训的这个版本不是dan上全部的画风，而是从群友处收集的128个常用画风，列表在[这里](./赠品/好画师.json)。
+
+不过考虑到大家的画师串都是抄来抄去的，128个大抵也够用了吧！
 
 ![./doc/指标2.webp](./doc/指标2.webp)
 
@@ -99,7 +101,7 @@ python 刷.py sdxl --out_dir="output" --sdxl_model="R:/path/to/waiNSFWIllustriou
 因为大家可能不知道怎么配参数，总之我试了1个配置，当然不是收敛最快的，不过肯定能跑，大家可以这样来跑看看——
 
 ```bash
-python train_moss.py --config="赠品/moss默认参数.json" --pretrained_model_name_or_path="C:/path/to/MOSS-Image-SFT" --train_data_dir="output" --output_dir="RU9MOSS"
+accelerate launch train_moss.py --config="赠品/moss默认参数.json" --pretrained_model_name_or_path="C:/path/to/MOSS-Image-SFT" --train_data_dir="output" --output_dir="RU9MOSS"
 ```
 
 
