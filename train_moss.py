@@ -168,7 +168,7 @@ def validation(global_step, accelerator, vae, text_encoder, tokenizer, transform
             transformer.train()
 
 
-def 加载模型(path) -> tuple:
+def 加载模型(path, moss_transformer=None) -> tuple:
     spec = importlib.util.spec_from_file_location("pipeline_moss_image", Path(path) / "pipeline_moss_image.py")
     moss_mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(moss_mod)
@@ -199,7 +199,7 @@ def 加载模型(path) -> tuple:
 
     tokenizer = AutoTokenizer.from_pretrained(path, subfolder="tokenizer")
     text_encoder = AutoModel.from_pretrained(path, subfolder="text_encoder", torch_dtype=torch.bfloat16)
-    transformer = TrainableMOSSImageTransformer.from_pretrained(path, subfolder="transformer", torch_dtype=torch.bfloat16)
+    transformer = TrainableMOSSImageTransformer.from_pretrained(moss_transformer or path, subfolder="transformer", torch_dtype=torch.bfloat16)
     transformer._pipeline_cls = TrainableMOSSImagePipeline
     vae = AutoencoderKLFlux2.from_pretrained(path, subfolder="vae", torch_dtype=torch.bfloat16)
     noise_scheduler = moss_mod.MOSSImageScheduler.from_pretrained(path, subfolder="scheduler")
@@ -264,6 +264,7 @@ def 读取配对数据集(data_dir: str, 幅度: str, seed: int = 1):
 
 def main(
     pretrained_model_name_or_path: str = "C:/Users/Administrator/Desktop/MOSS-Image-SFT",
+    moss_transformer: str = None,
     train_data_dir: str = "X:/RU9M_moss_小喙5.0",
     validation_prompt_list: str | list[str] = '1girl',
     validation_infer_steps: int = 20,
@@ -322,7 +323,7 @@ def main(
     if accelerator.is_main_process:
         os.makedirs(output_dir, exist_ok=True)
 
-    特 = [哈(train_data_dir), 哈(pretrained_model_name_or_path), optimizer, str(muon_lr_scale) * (optimizer == 'muon'), f'lr{lr}', mixed_precision, lr_scheduler, f'{round(lr_cosine_min, 3)}_{cycle_steps}' * (lr_scheduler == 'cosine_with_restarts'), f'lora{rank}_{alpha}', f'time{time_min}_{time_max}', f'decay{adam_weight_decay}', f'shift{shift}', f'幅{幅度}', seed, f'rn{reset_noise_rate}' * (reset_noise_rate > 0)]
+    特 = [哈(train_data_dir), 哈(moss_transformer or pretrained_model_name_or_path), optimizer, str(muon_lr_scale) * (optimizer == 'muon'), f'lr{lr}', mixed_precision, lr_scheduler, f'{round(lr_cosine_min, 3)}_{cycle_steps}' * (lr_scheduler == 'cosine_with_restarts'), f'lora{rank}_{alpha}', f'time{time_min}_{time_max}', f'decay{adam_weight_decay}', f'shift{shift}', f'幅{幅度}', seed, f'rn{reset_noise_rate}' * (reset_noise_rate > 0)]
     特征 = '-'.join([str(i) for i in 特 if i != ''])
 
     if os.path.isdir(os.path.join(output_dir, 特征, f'checkpoint-{max_train_steps}')):
@@ -335,7 +336,7 @@ def main(
         json.dump(metadata, f, indent=2, ensure_ascii=False)
     print('开始训练: ', str((Path(checkpoint_dir) / 'metadata.json').resolve()))
 
-    tokenizer, text_encoder, transformer, vae, noise_scheduler = 加载模型(pretrained_model_name_or_path)
+    tokenizer, text_encoder, transformer, vae, noise_scheduler = 加载模型(pretrained_model_name_or_path, moss_transformer)
     vae.to(accelerator.device)
     transformer.to(accelerator.device)
 
@@ -552,7 +553,3 @@ def ember(config={}, **kwargs):
 
 if __name__ == "__main__":
     fire.Fire(ember)
-
-
-# python .\train_moss.py --config=moss默认参数.json
-# python .\train_moss.py --config=moss默认参数.json --pretrained_model_name_or_path=R:/models/MOSS-Image-SFT --reset_noise_rate=0.4
