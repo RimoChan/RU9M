@@ -1,4 +1,5 @@
 import os
+os.environ['PYTORCH_ALLOC_CONF'] = os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'backend:cudaMallocAsync,expandable_segments:True'
 import pickle
 import random
 from pathlib import Path
@@ -170,6 +171,7 @@ def sdxl(
     seed=9,
     注入发色=False,
     后缀='krea',
+    缩放=1,
 ):
     random.seed(seed)
     out_path = Path(out_dir)
@@ -185,7 +187,8 @@ def sdxl(
     if 注入发色:
         人物特征标签表, 发色 = _色()
     with torch.inference_mode():
-        for i, pkl_path in tqdm(enumerate(sorted(out_path.glob('*.pkl'))), desc='sdxl', ncols=60):
+        源 = [*enumerate(sorted(out_path.glob('*.pkl')))]
+        for i, pkl_path in tqdm(源, desc='sdxl', ncols=60):
             新模型png_path = pkl_path.with_name(f'{pkl_path.stem}_{后缀}.png')
             sdxl_png_path: Path = pkl_path.with_name(f'{pkl_path.stem}_sdxl_{strength}.png')
             if sdxl_png_path.is_file():
@@ -203,6 +206,9 @@ def sdxl(
                         prompt = ', '.join(tags)
                         # exit()
             img新 = Image.open(新模型png_path)
+            原尺寸 = img新.size
+            if 缩放 != 1:
+                img新 = img新.resize((int(原尺寸[0] * 缩放), int(原尺寸[1] * 缩放)), Image.Resampling.LANCZOS)
             conditioning, pooled = compel(prompt)
             img_sdxl = pipe_sdxl(
                 prompt_embeds=conditioning,
@@ -211,6 +217,8 @@ def sdxl(
                 strength=strength,
                 generator=torch.Generator(device='cuda').manual_seed(seed*100 + i*7)
             ).images[0]
+            if 缩放 != 1:
+                img_sdxl = img_sdxl.resize(原尺寸, Image.Resampling.LANCZOS)
             img_sdxl.save(sdxl_png_path)
 
 

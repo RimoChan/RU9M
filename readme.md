@@ -32,7 +32,7 @@
 
 效果是这样:
 
-![./doc/step172000.webp](./doc/step172000.webp)
+![./doc/step144000.webp](./doc/step144000.webp)
 
 因为还在测试阶段，所以现在训的这个版本不是dan上全部的画风，而是从群友处收集的128个常用画风，列表在[这里](./赠品/好画师.json)。
 
@@ -87,7 +87,7 @@ python 刷.py 清洗 --out_dir="output"
 可以参考这个命令——
 
 ```bash
-python 刷.py sdxl --out_dir="output" --sdxl_model="R:/path/to/waiNSFWIllustrious_v140.safetensors" --后缀="moss" --strength=0.8
+python 刷.py sdxl --out_dir="output" --sdxl_model="R:/path/to/waiNSFWIllustrious_v140.safetensors" --后缀="moss" --strength=0.8 --缩放=1.5
 ```
 
 ### 训练
